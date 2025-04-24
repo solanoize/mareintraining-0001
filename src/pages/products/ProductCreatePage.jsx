@@ -18,7 +18,12 @@ export default function ProductCreatePage() {
 
   const onCreateProduct = async () => {
     try {
-      const payload = { ...productCreate.object };
+      const payload = {};
+      payload.category = productCreate.object?.category.id;
+      payload.price = productCreate.object?.price;
+      payload.stock = productCreate.object?.stock;
+      payload.name = productCreate.object?.name;
+
       await productCreate.onCreate(payload);
       navigate("/products", { replace: true });
     } catch (error) {
@@ -37,6 +42,11 @@ export default function ProductCreatePage() {
 
   const onClose = () => {
     setShow(false);
+  };
+
+  const onSelectProduct = (value) => {
+    productCreate.onSetCategory(value);
+    onClose();
   };
 
   return (
@@ -75,7 +85,7 @@ export default function ProductCreatePage() {
         error={categoryList.error}
         onClose={onClose}
         onGets={categoryList.onGets}
-        onSelect={() => {}}
+        onSelect={onSelectProduct}
         pagination={categoryList.pagination}
         show={show}
       />

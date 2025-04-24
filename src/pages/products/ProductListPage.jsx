@@ -8,15 +8,17 @@ import {
   SharedSearch,
 } from "../../components/shared";
 import { ProductList } from "../../components/products";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useOutlet } from "react-router-dom";
 
 export default function ProductListPage() {
   const navigate = useNavigate();
+  const outlet = useOutlet();
+  const location = useLocation();
   const { onGets: onGetProducts, ...productList } = useProductList();
 
   React.useEffect(() => {
     onGetProducts();
-  }, [onGetProducts]);
+  }, [onGetProducts, location]);
 
   const onCreateProduct = () => {
     navigate("/products/create");
@@ -54,6 +56,7 @@ export default function ProductListPage() {
               </Card.Footer>
             </Card>
           </Col>
+          {outlet && <Col>{outlet}</Col>}
         </Row>
       </Container>
     </React.Fragment>

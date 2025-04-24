@@ -11,9 +11,11 @@ function App() {
             <Route index element={<AccountSignInPage />} />
           </Route>
           <Route path="/products" element={<Outlet />}>
-            <Route index element={<ProductListPage />} />
-            <Route path="create" element={<ProductCreatePage />} />
+            <Route path="" element={<ProductListPage />}>
+              <Route path="create" element={<ProductCreatePage />} />
+            </Route>
           </Route>
+          <Route path="*" element={<h1>404 Ups!</h1>} />
         </Routes>
       </BrowserRouter>
     </>

@@ -56,6 +56,7 @@ export default function ProductForm({
           <SharedError error={error} field={"stock"} />
         </Col>
       </Form.Group>
+
       {categoryOptions && (
         <Form.Group as={Row} className="mb-3">
           <Form.Label column sm={2}>

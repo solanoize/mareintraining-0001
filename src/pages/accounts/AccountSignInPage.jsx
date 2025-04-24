@@ -27,7 +27,7 @@ export default function AccountSignInPage() {
       const response = await accountSignIn(payload);
       console.log(response?.data);
       localStorage.setItem("token", response?.data?.token);
-      navigate("/", { replace: true });
+      navigate("/products", { replace: true });
     } catch (error) {
       console.log(error);
       setUserError(error);
