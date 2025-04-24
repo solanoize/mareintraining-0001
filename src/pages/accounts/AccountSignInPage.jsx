@@ -1,91 +1,83 @@
-import { gql, useMutation } from "@apollo/client";
 import React from "react";
+import { accountSignIn } from "../../services/accounts";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
-import Swal from "sweetalert2";
-import LoadingIndicator from "../../components/shared/LoadingIndicator";
+import {
+  SharedFieldValidation,
+  SharedNonFieldValidation,
+} from "../../components/shared";
 import { useNavigate } from "react-router-dom";
-
-const TOKEN_AUTH = gql`
-  mutation TokenAuth($username: String!, $password: String!) {
-    tokenAuth(username: $username, password: $password) {
-      token
-    }
-  }
-`;
 
 export default function AccountSignInPage() {
   const navigate = useNavigate();
-  const [tokenAuth, tokenAuthState] = useMutation(TOKEN_AUTH);
+  const [userError, setUserError] = React.useState(null);
+  const [userLoading, setUserLoading] = React.useState(false);
 
-  const handleSubmitSignIn = async (e) => {
+  const onSignIn = async (e) => {
     e.preventDefault();
+
+    setUserLoading(true);
+    setUserError(null);
+
     try {
-      const usernameValue = e.target.username.value;
-      const passwordValue = e.target.password.value;
+      const payload = {
+        username: e.target.username.value,
+        password: e.target.password.value,
+      };
 
-      const response = await tokenAuth({
-        variables: {
-          username: usernameValue,
-          password: passwordValue,
-        },
-      });
-
-      let token = response?.data?.tokenAuth?.token;
-      localStorage.setItem("token", token);
-      Swal.fire({
-        title: "Sign Success!",
-        text: "You are logged in.",
-        icon: "success",
-      });
-
+      const response = await accountSignIn(payload);
+      console.log(response?.data);
+      localStorage.setItem("token", response?.data?.token);
       navigate("/", { replace: true });
     } catch (error) {
-      Swal.fire({
-        title: error?.message,
-        text: "Ups! something wrong.",
-        icon: "error",
-      });
+      console.log(error);
+      setUserError(error);
+    } finally {
+      setUserLoading(false);
     }
   };
 
   return (
-    <Container>
-      <Row className="d-flex justify-content-center align-items-center vh-100">
-        <Col className="col-4">
-          <Card className="shadow">
-            <Card.Body>
-              <Card.Title>
-                SpaceX <LoadingIndicator isLoading={tokenAuthState?.loading} />
-              </Card.Title>
+    <React.Fragment>
+      <Container className="mt-4 mb-4">
+        <SharedNonFieldValidation error={userError} />
+        <Row className="d-flex justify-content-center align-items-center vh-100">
+          <Col className="col-4">
+            <Card>
+              <Card.Body>
+                <Card.Title className="mb-3">Sign In</Card.Title>
 
-              <Form onSubmit={handleSubmitSignIn}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Username</Form.Label>
-                  <Form.Control
-                    disabled={tokenAuthState?.loading}
-                    name="username"
-                  />
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control
-                    disabled={tokenAuthState?.loading}
-                    name="password"
-                    type="password"
-                  />
-                </Form.Group>
-
-                <div>
-                  <Button type="submit" disabled={tokenAuthState?.loading}>
-                    Sign In
-                  </Button>
-                </div>
-              </Form>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+                <Form onSubmit={onSignIn}>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="mb-2">Username</Form.Label>
+                    <Form.Control disabled={userLoading} name="username" />
+                    <SharedFieldValidation
+                      error={userError}
+                      field={"username"}
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="mb-2">Password</Form.Label>
+                    <Form.Control
+                      disabled={userLoading}
+                      type="password"
+                      name="password"
+                    />
+                    <SharedFieldValidation
+                      error={userError}
+                      field={"password"}
+                    />
+                  </Form.Group>
+                  <div className="d-flex justify-content-end align-items-center gap-2">
+                    <Button disabled={userLoading} type="submit">
+                      Sign In
+                    </Button>
+                  </div>
+                </Form>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+    </React.Fragment>
   );
 }

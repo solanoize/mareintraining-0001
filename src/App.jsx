@@ -1,8 +1,7 @@
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
-import AccountSignInPage from "./pages/accounts/AccountSignInPage";
-import ProductListPage from "./pages/products/ProductListPage";
+import { AccountSignInPage } from "./pages/accounts";
+import { ProductListPage } from "./pages/products";
 
-// {/* TODO: add layout */}
 function App() {
   return (
     <>
