@@ -9,3 +9,4 @@ export { default as SharedPageHeader } from "./SharedPageHeader";
 export { default as SharedTextBox } from "./SharedTextBox";
 export { default as SharedInput } from "./SharedInput";
 export { default as SharedError } from "./SharedError"
+export { default as SharedModal } from "./SharedModal"

@@ -10,7 +10,7 @@ function App() {
           <Route path="/accounts" element={<Outlet />}>
             <Route index element={<AccountSignInPage />} />
           </Route>
-          <Route path="/" element={<Outlet />}>
+          <Route path="/products" element={<Outlet />}>
             <Route index element={<ProductListPage />} />
             <Route path="create" element={<ProductCreatePage />} />
           </Route>
