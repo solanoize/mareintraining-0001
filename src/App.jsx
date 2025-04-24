@@ -1,6 +1,6 @@
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import { AccountSignInPage } from "./pages/accounts";
-import { ProductListPage } from "./pages/products";
+import { ProductCreatePage, ProductListPage } from "./pages/products";
 
 function App() {
   return (
@@ -12,6 +12,7 @@ function App() {
           </Route>
           <Route path="/" element={<Outlet />}>
             <Route index element={<ProductListPage />} />
+            <Route path="create" element={<ProductCreatePage />} />
           </Route>
         </Routes>
       </BrowserRouter>

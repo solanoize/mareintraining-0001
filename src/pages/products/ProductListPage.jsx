@@ -1,29 +1,11 @@
 import React from "react";
+import { useProductList } from "../../hooks/products";
+import { Card, Col, Container, Row } from "react-bootstrap";
 import {
-  useProductCommit,
-  useProductList,
-  useProductLookup,
-} from "../../hooks/products";
-import {
-  Button,
-  Card,
-  Col,
-  Container,
-  Form,
-  Row,
-  Table,
-} from "react-bootstrap";
-import {
-  SharedFieldValidation,
-  SharedInput,
-  SharedNavbarBreadcrumb,
   SharedPageHeader,
   SharedPagination,
   SharedSearch,
-  SharedTextBox,
 } from "../../components/shared";
-import { FaSave, FaShare } from "react-icons/fa";
-import { FaCircleXmark } from "react-icons/fa6";
 import { ProductList } from "../../components/products";
 
 export default function ProductListPage() {
@@ -36,6 +18,7 @@ export default function ProductListPage() {
   return (
     <React.Fragment>
       <Container className="mb-4 mt-4">
+        <SharedPageHeader title={"Products"} />
         <Row className="mb-3">
           <Col>
             <Card>
