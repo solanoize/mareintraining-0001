@@ -14,3 +14,44 @@ a {
 .cursor-pointer {
   cursor: pointer;
 }
+
+@media print {
+  body {
+    background-color: white;
+  }
+  .card {
+    border: none;
+  }
+  .no-print {
+    display: none !important;
+  }
+
+  .container {
+    /* width: 100%; */
+    padding: 16px;
+    margin: 0px auto;
+  }
+
+  /* tbody,
+  tfoot,
+  thead,
+  th,
+  td {
+    color: black !important;
+  } */
+  .table-dark th,
+  .table-dark td,
+  .table-dark tfoot td,
+  .table-dark tfoot th,
+  .table-dark thead th {
+    background-color: #212529 !important;
+    color: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body {
+    /* font-family: "Courier New", Courier, monospace; */
+    font-size: 12pt;
+  }
+}

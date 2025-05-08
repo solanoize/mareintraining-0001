@@ -24,6 +24,10 @@ export default function ProductListPage() {
     navigate("/products/create");
   };
 
+  const onUpdateProduct = (value) => {
+    navigate(`/products/${value?.id}/update`);
+  };
+
   return (
     <React.Fragment>
       <SharedNavbarBreadcrumb />
@@ -44,9 +48,7 @@ export default function ProductListPage() {
               </Card.Body>
               <ProductList
                 collection={productList.collection}
-                onSelect={(value) => {
-                  console.log(value);
-                }}
+                onSelect={onUpdateProduct}
               />
               <Card.Footer>
                 <SharedPagination

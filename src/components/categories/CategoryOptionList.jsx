@@ -6,6 +6,7 @@ import {
   SharedSearch,
 } from "../shared";
 import { CategoryList } from ".";
+import { Modal } from "react-bootstrap";
 
 export default function CategoryOptionList({
   onClose,
@@ -18,6 +19,16 @@ export default function CategoryOptionList({
 }) {
   return (
     <React.Fragment>
+      <Modal show={show} onHide={onClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Categories</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <SharedError error={error} />
+          <SharedSearch onGets={onGets} />
+        </Modal.Body>
+      </Modal>
       <SharedModal size="lg" onClose={onClose} show={show}>
         <SharedModal.Title>Category Options</SharedModal.Title>
         <SharedModal.Body>

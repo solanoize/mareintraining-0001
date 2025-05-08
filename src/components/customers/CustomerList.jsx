@@ -1,14 +1,14 @@
+import React from "react";
 import { Table } from "react-bootstrap";
 
-export default function ProductList({ collection, children }) {
+export default function CustomerList({ collection, children }) {
   return (
-    <Table className="mt-1 mb-1" hover responsive>
+    <Table className="mt-1 mb-0" borderless striped hover responsive>
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Price</th>
-          <th>Stock</th>
-          <th>Category</th>
+          <th>Name Dao Ming Se</th>
+          <th>Phone</th>
+          <th>Email</th>
           {children && <th>#</th>}
         </tr>
       </thead>
@@ -16,9 +16,8 @@ export default function ProductList({ collection, children }) {
         {collection?.map((value) => (
           <tr key={value?.id}>
             <td>{value?.name}</td>
-            <td>{value?.price}</td>
-            <td>{value?.stock}</td>
-            <td>{value?.category?.name || "-"}</td>
+            <td>{value?.phone}</td>
+            <td>{value?.email}</td>
             {children && <td>{children(value)}</td>}
           </tr>
         ))}

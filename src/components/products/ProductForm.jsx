@@ -60,14 +60,13 @@ export default function ProductForm({
       {categoryOptions && (
         <Form.Group as={Row} className="mb-3">
           <Form.Label column sm={2}>
-            Category {object?.meta?.category?.name}
+            Category
           </Form.Label>
           <Col sm={10}>
             <InputGroup className="w-50">
-              <Form.Control
-                readOnly
-                defaultValue={object?.category?.name || ""}
-              />
+              <InputGroup.Text>
+                {object?.category?.name || "Please select category"}
+              </InputGroup.Text>
               {categoryOptions}
             </InputGroup>
             <SharedError error={error} field={"category"} />
