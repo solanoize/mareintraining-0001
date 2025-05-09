@@ -12,6 +12,7 @@ import {
 import { InvoiceForm } from "../../components/invoices";
 import { useCustomerCreate, useCustomerList } from "../../hooks/customers";
 import {
+  CustomerAutocomplete,
   CustomerOptionForm,
   CustomerOptionList,
 } from "../../components/customers";
@@ -20,7 +21,6 @@ import { useInvoiceCreate } from "../../hooks/invoices";
 
 export default function InvoiceCreatePage() {
   const navigate = useNavigate();
-  const { onRefresh } = useOutletContext();
   const [showCustomerList, setShowCustomerList] = React.useState(false);
   const [showCustomerCreate, setShowCustomerCreate] = React.useState(false);
 
@@ -89,7 +89,7 @@ export default function InvoiceCreatePage() {
       payload.invoice_date = invoiceCreate.object?.invoice_date;
       payload.note = invoiceCreate.object?.note;
       await invoiceCreate.onCreate(payload);
-      onRefresh();
+
       // navigate("/invoices", { replace: true });
     } catch (error) {
       console.warn(error);
@@ -107,6 +107,8 @@ export default function InvoiceCreatePage() {
           <Card>
             <Card.Header>New Invoice</Card.Header>
             <Card.Body>
+              {JSON.stringify(invoiceCreate.object)}
+              <CustomerAutocomplete onSelect={onSelectCustomer} />
               <Row className="mb-3">
                 <Col>
                   <InvoiceForm.InvoiceNumberField

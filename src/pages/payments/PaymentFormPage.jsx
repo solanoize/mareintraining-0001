@@ -1,45 +1,56 @@
 import React from "react";
-import { useOutletContext, useParams } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { PaymentForm } from "../../components/payments";
-import { usePaymentCreate } from "../../hooks/payments";
-import { Card } from "react-bootstrap";
-import { SharedError } from "../../components/shared";
 import { Button } from "devextreme-react";
+import { useTransaction } from "../../foundation/hooks";
+import { getFieldError } from "../../foundation/services";
 
 export default function PaymentFormPage() {
+  const navigate = useNavigate();
   const params = useParams();
   const outletContext = useOutletContext();
-  const paymentCreate = usePaymentCreate();
+
+  const paymentTransaction = useTransaction("payments");
 
   const onCreatePayment = async () => {
     try {
       const payload = {};
       payload.invoice = params?.id;
-      payload.amount = paymentCreate.object?.amount;
+      payload.amount = paymentTransaction.object?.amount;
       payload.method = "Transfer";
-      await paymentCreate.onCreate(payload);
+      await paymentTransaction.onCreate(payload);
+      // not work
+      // console.log(outletContext?.onRefreshRoot());
       await outletContext?.onRefresh(params?.id);
-      await outletContext?.onRefreshRoot();
+      onClosePayment();
     } catch (error) {
       console.warn(error);
     }
   };
 
+  const onClosePayment = () => {
+    navigate("../", { replace: true });
+  };
+
   return (
     <React.Fragment>
-      <Card>
-        <Card.Body>
-          <SharedError error={paymentCreate.error} />
-          <PaymentForm
-            object={paymentCreate.object}
-            onChange={paymentCreate.onChange}
-          />
-        </Card.Body>
-        <Card.Footer>
-          <Button text="Save" onClick={onCreatePayment} />
-          {/* <Button onClick={onCreatePayment}>Save</Button> */}
-        </Card.Footer>
-      </Card>
+      {paymentTransaction.error && (
+        <div style={{ marginBottom: "16px", marginTop: "16px", color: "red" }}>
+          {getFieldError(paymentTransaction.error, "non_field_errors")}
+        </div>
+      )}
+
+      <div style={{ marginBottom: "16px", marginTop: "16px" }}>
+        <PaymentForm
+          onValueChange={paymentTransaction.onValueChange}
+          object={paymentTransaction.object}
+          error={paymentTransaction.error}
+        />
+      </div>
+
+      <div style={{ marginBottom: "16px", marginTop: "16px" }}>
+        <Button text="Save" onClick={onCreatePayment} icon="save" />
+      </div>
     </React.Fragment>
   );
 }

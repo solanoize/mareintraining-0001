@@ -24,7 +24,7 @@ function App() {
           </Route>
 
           <Route path="invoices" element={<InvoiceListPage />}>
-            <Route path="create" element={<InvoiceCreatePage />}>
+            <Route path="" element={<InvoiceCreatePage />}>
               <Route index element={<CartListPage />} />
               <Route path="carts/create" element={<CartCreatePage />} />
               <Route path="carts/:cartId/update" element={<CartUpdatePage />} />

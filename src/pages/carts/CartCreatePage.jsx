@@ -92,7 +92,6 @@ export default function CartCreatePage() {
               <CartForm.SubtotalField value={cartCreate.subtotal} />
             </Col>
           </Row>
-
         </Card.Body>
         <Card.Footer>
           <ButtonGroup>

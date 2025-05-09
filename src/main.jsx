@@ -1,9 +1,9 @@
 import { createRoot } from "react-dom/client";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "devextreme/dist/css/dx.light.css";
+// import "bootstrap/dist/css/bootstrap.min.css";
+import "devextreme/dist/css/dx.dark.css";
 
-import App from "./App.jsx";
 import "./index.css";
+import App from "./App.jsx";
 import {
   ApolloClient,
   ApolloProvider,

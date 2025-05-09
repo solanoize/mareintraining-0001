@@ -1,117 +1,83 @@
-import { Outlet, useNavigate, useOutlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import React from "react";
-import {
-  SharedError,
-  SharedNavbarBreadcrumb,
-  SharedPageHeader,
-  SharedPagination,
-  SharedSearch,
-} from "../../components/shared";
-import {
-  Button,
-  ButtonGroup,
-  Card,
-  Col,
-  Container,
-  Row,
-} from "react-bootstrap";
 import { InvoiceList } from "../../components/invoices";
-import { useInvoiceList } from "../../hooks/invoices";
+
+import Splitter, { Item } from "devextreme-react/splitter";
+import Menu, { Item as MenuItem } from "devextreme-react/cjs/menu";
+import { useDataSource, useTransaction } from "../../foundation/hooks";
 
 export default function InvoiceListPage() {
   const navigate = useNavigate();
-  const outlet = useOutlet();
-  const { onGets: onGetInvoices, ...invoiceList } = useInvoiceList();
-
-  React.useEffect(() => {
-    onGetInvoices();
-  }, [onGetInvoices]);
+  const invoiceDataSource = useDataSource("invoices");
+  const invoiceTransaction = useTransaction("invoices");
 
   const onCreateInvoice = () => {
     navigate("/invoices/create");
   };
 
-  const onDetailInvoice = (value) => {
-    navigate(`/invoices/${value?.id}/detail`);
+  const onDetailInvoice = () => {
+    navigate(`/invoices/${invoiceTransaction.object?.id}/detail`);
   };
 
   return (
     <React.Fragment>
-      <SharedNavbarBreadcrumb />
-      <Container fluid className="mb-4 mt-4">
-        <SharedError error={invoiceList.error} />
-
-        {/* <Row className="mb-3">
-          <Col>
-            <SharedPageHeader
-              title={"Invoices"}
-              actions={
-                <Button variant="dark" onClick={onCreateInvoice}>
-                  Create Invoice
-                </Button>
-              }
-            />
-          </Col>
-        </Row> */}
-
-        {/* <Row className="mb-3">
-          <Col>
-            <Card>
-              <Card.Body>
-                <SharedSearch className="w-75" onGets={onGetInvoices} />
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row> */}
-
-        <Row className="mb-3">
-          <Col>
-            <Card className="no-print">
-              <Card.Header>
-                <div className="d-flex justify-content-between gap-3">
-                  <SharedSearch className="w-100" onGets={onGetInvoices} />
-                  <Button
-                    className="text-nowrap"
-                    variant="dark"
-                    onClick={onCreateInvoice}
-                  >
-                    Create Invoice
-                  </Button>
-                </div>
-              </Card.Header>
-              <InvoiceList
-                collection={invoiceList.collection}
-                onSearch={(value) => {
-                  onGetInvoices(null, { search: value });
+      <Splitter id="splitter">
+        <Item
+          resizable={false}
+          collapsible={true}
+          collapsedSize={"30%"}
+          collapsed={true}
+          render={() => (
+            <div className="pane-content">
+              <Outlet
+                context={{
+                  onRefresh: invoiceDataSource.onRefresh,
                 }}
-              >
-                {(value) => (
-                  <ButtonGroup>
-                    <Button
-                      variant="dark"
-                      onClick={() => onDetailInvoice(value)}
-                    >
-                      View
-                    </Button>
-                  </ButtonGroup>
-                )}
-              </InvoiceList>
-              <Card.Footer>
-                <SharedPagination
-                  onGets={onGetInvoices}
-                  pagination={invoiceList.pagination}
-                />
-              </Card.Footer>
-            </Card>
-          </Col>
-
-          {outlet && (
-            <Col md={5}>
-              <Outlet context={{ onRefresh: invoiceList.onRefresh }} />
-            </Col>
+              />
+            </div>
           )}
-        </Row>
-      </Container>
+        />
+        <Item resizable={true} collapsible={true}>
+          <Splitter orientation="vertical">
+            <Item
+              resizable={true}
+              collapsedSize="8%"
+              maxSize={"8%"}
+              size={"8%"}
+              collapsible={true}
+              render={() => (
+                <Menu>
+                  <MenuItem
+                    text="New Invoice"
+                    onClick={() => onCreateInvoice()}
+                  />
+                  <MenuItem
+                    disabled={!invoiceTransaction.isDetail}
+                    text={"Payment"}
+                    onClick={() => onDetailInvoice()}
+                  />
+                </Menu>
+              )}
+            ></Item>
+            <Item
+              resizable={true}
+              collapsible={true}
+              collapsedSize="100%"
+              render={() => (
+                <React.Fragment>
+                  <InvoiceList
+                    // hooks ref still doesn't work in new React version vs DevExtreme
+                    // because devextreme still make ref using old version react.
+                    gridRef={invoiceDataSource.gridRef}
+                    dataSource={invoiceDataSource.dataSource}
+                    onSelect={(value) => invoiceTransaction.onInit(value)}
+                  />
+                </React.Fragment>
+              )}
+            />
+          </Splitter>
+        </Item>
+      </Splitter>
     </React.Fragment>
   );
 }
